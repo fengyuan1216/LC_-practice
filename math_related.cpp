@@ -165,7 +165,20 @@ string intToRoman(int num) {
     base_relation[400] = "CD";
     base_relation[900] = "CM";
 
-    vector<int> base_int = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+    vector<int> base_int;
+    base_int.push_back(1000);
+    base_int.push_back(900);
+    base_int.push_back(500);
+    base_int.push_back(400);
+    base_int.push_back(100);
+    base_int.push_back(90);
+    base_int.push_back(50);
+    base_int.push_back(40);
+    base_int.push_back(10);
+    base_int.push_back(9);
+    base_int.push_back(5);
+    base_int.push_back(4);
+    base_int.push_back(1);
 
     string num_roman = "";
     int base_index = 0;
