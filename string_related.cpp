@@ -294,15 +294,47 @@ string longestCommonPrefix(vector<string>& strs) {
     }
 }
 
+bool isValid(string s) {
+    stack<char> s_store;
+    if (s.length() == 0)
+        return true;
+        
+    for (int i = 0; i <= s.length() - 1; i++){
+        if (s[i] == '(' or s[i] == '[' or s[i] == '{')
+            s_store.push(s[i]);
+        else{
+            if (s[i] == ')'){
+                if (s_store.empty() == false && s_store.top() == '(')
+                    s_store.pop();
+                else
+                    return false;
+            }
+            else if (s[i] == ']'){
+                if (s_store.empty() == false && s_store.top() == '[')
+                    s_store.pop();
+                else
+                    return false;
+            }
+            else if (s[i] == '}'){
+                if (s_store.empty() == false && s_store.top() == '{')
+                    s_store.pop();
+                else
+                    return false;
+            }
+            else
+                return false;
+        }
+    }
+    return s_store.empty();
+}
+
 
 int main()
 {
     cout<<"test begin"<<endl;
 
-    vector<string> test_vector;
-    test_vector.push_back("aca");
-    test_vector.push_back("cba");
-    cout<<longestCommonPrefix(test_vector)<<endl;
+    string test_str = "";
+    cout<<isValid(test_str)<<endl;
 
     return 0;
 }
