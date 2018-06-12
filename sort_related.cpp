@@ -116,21 +116,35 @@ vector<vector<int> > fourSum(vector<int>& nums, int target) {
     }
 }
 
+int removeDuplicates(vector<int>& nums) {
+    if (nums.size() == 0 || nums.size() == 1)
+        return nums.size();
+    else{
+        vector<int>::iterator iter_left = nums.begin();
+        vector<int>::iterator iter_right = nums.begin() + 1;
+        while (iter_left != nums.end() && iter_right != nums.end()){
+            while (*iter_right == *iter_left && iter_right != nums.end())
+                iter_right = nums.erase(iter_right);
+            iter_left++;
+            iter_right++;
+        }
+        return nums.size();
+    }
+}
+
 
 int main()
 {
     cout<<"test begin"<<endl;
 
-    vector<int> test_vector;
-    test_vector.push_back(1);
-    test_vector.push_back(0);
-    test_vector.push_back(-1);
-    test_vector.push_back(0);
-    test_vector.push_back(-2);
-    test_vector.push_back(2);
-
-    vector<vector<int> > result_get = fourSum(test_vector, 0);
-    cout<<result_get.size()<<endl;
+    vector<int> test;
+    test.push_back(0);
+    test.push_back(0);
+    // test.push_back(1);
+    // test.push_back(1);
+    // test.push_back(2);
+    // test.push_back(3);
+    cout<<removeDuplicates(test)<<endl;
 
     return 0;
 }
