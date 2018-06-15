@@ -328,13 +328,37 @@ bool isValid(string s) {
     return s_store.empty();
 }
 
+int strStr(string haystack, string needle) {
+    if (needle.length() == 0 || (haystack.length() == 0 && needle.length() == 0))
+        return 0;
+    else if (haystack.length() == 0 && needle.length() > 0)
+        return -1;
+    else{
+        bool if_match = false;
+        for (int i = 0; i <= haystack.length() - 1; i++){
+            if (haystack[i] == needle[0]){
+                for (int j = 0; j <= needle.length() - 1; j++){
+                    if (needle[j] != haystack[i + j])
+                        break;
+                    if (j == needle.length() - 1)
+                        if_match = true;
+                }
+                if (if_match)
+                    return i;
+            }
+        }
+        return -1;
+    }
+}
+
 
 int main()
 {
     cout<<"test begin"<<endl;
 
-    string test_str = "";
-    cout<<isValid(test_str)<<endl;
+    string test_str1 = "aaa";
+    string test_str2 = "a";
+    cout<<strStr(test_str1, test_str2)<<endl;
 
     return 0;
 }

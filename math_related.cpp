@@ -260,12 +260,59 @@ int romanToInt(string s) {
     return num_int;
 }
 
+int divide(int dividend, int divisor) {
+    int max_int = ~ (1 << 31);
+    int min_int = 1 << 31;
+
+    if (dividend == min_int && divisor == -1)
+        return max_int;
+    else{
+        long int dividend_expand = dividend;
+        long int divisor_expand = divisor;
+        bool if_same_sign = true;
+        if (dividend_expand < 0){
+            dividend_expand = -dividend_expand;
+            if_same_sign = !if_same_sign;
+        }
+        if (divisor_expand < 0){
+            divisor_expand = -divisor_expand;
+            if_same_sign = !if_same_sign;
+        }
+
+        vector<long int> divisor_expand_table;
+        vector<long int> value_expand_table;
+        long int divisor_tmp = divisor_expand;
+        long int value_tmp = 1;
+        while (divisor_tmp <= dividend_expand){
+            divisor_expand_table.push_back(divisor_tmp);
+            value_expand_table.push_back(value_tmp);
+            divisor_tmp = divisor_tmp << 1;
+            value_tmp = value_tmp << 1;
+        }
+
+        long int counter = 0;
+        for (int index = divisor_expand_table.size() - 1; index >= 0; index--){
+            while (dividend_expand >= divisor_expand_table[index]){
+                dividend_expand -= divisor_expand_table[index];
+                counter += value_expand_table[index];
+            }
+        }
+
+        int return_val = 0;
+        if (if_same_sign)
+            return_val = counter;
+        else
+            return_val = -counter;
+        return return_val;
+    }
+}
+
 
 int main()
 {
     cout<<"test begin"<<endl;
 
-    cout<<isPalindrome(1221)<<endl;
+    cout<<divide(15,2)<<endl;
     // cout<<(1<<31);
 
     return 0;

@@ -132,6 +132,21 @@ int removeDuplicates(vector<int>& nums) {
     }
 }
 
+int removeElement(vector<int>& nums, int val) {
+    if (nums.size() == 0)
+        return 0;
+    else{
+        vector<int>::iterator iter = nums.begin();
+        while (iter != nums.end()){
+            if (*iter == val)
+                iter = nums.erase(iter);
+            else
+                iter++;
+        }
+        return nums.size();
+    }
+}
+
 
 int main()
 {
@@ -140,11 +155,11 @@ int main()
     vector<int> test;
     test.push_back(0);
     test.push_back(0);
-    // test.push_back(1);
-    // test.push_back(1);
-    // test.push_back(2);
-    // test.push_back(3);
-    cout<<removeDuplicates(test)<<endl;
+    test.push_back(1);
+    test.push_back(1);
+    test.push_back(2);
+    test.push_back(3);
+    cout<<removeElement(test, 0)<<endl;
 
     return 0;
 }
