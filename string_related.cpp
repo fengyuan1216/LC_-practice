@@ -4,6 +4,7 @@
 #include<vector>
 #include<stack>
 #include<map>
+#include<queue>
 
 using namespace std;
 
@@ -57,29 +58,19 @@ string longestPalindrome(string s)
 int longestValidParentheses(string s)
 {
     vector<bool> s_judge(s.length(), false);
-    stack<char> s_symbol;
     stack<int> s_index;
 
     for (int i = 0; i < s.length(); ++i)
     {
         if (s[i] == '(')
-        {
-            s_symbol.push('(');
             s_index.push(i);
-        }
         else
         {
-            if ((!s_symbol.empty()) && (s_symbol.top() == '('))
+            if (!s_index.empty())
             {
                 s_judge[i] = true;
                 s_judge[s_index.top()] = true;
-                s_symbol.pop();
                 s_index.pop();
-            }
-            else
-            {
-                s_symbol.push(')');
-                s_index.push(i);
             }
         }
     }
@@ -100,7 +91,7 @@ int longestValidParentheses(string s)
                 current_len++;
             }
 
-            cursor_index = test_pointer;
+            cursor_index = test_pointer + 1;
 
             if (current_len > longest_len)
                 longest_len = current_len;
@@ -351,14 +342,160 @@ int strStr(string haystack, string needle) {
     }
 }
 
+struct data_point{
+    string word;
+    int index;
+};
+
+struct cmp {
+    bool operator ()(const data_point& a, const data_point& b){
+        return a.index > b.index;
+    }
+};
+
+vector<int> findSubstring(string s, vector<string>& words){
+    vector<int> match_loc;
+    if (words.size() == 0 || s.length() == 0)
+        return match_loc;
+    else{
+        int word_len = words[0].length();
+        int begin_index = 0;
+        int end_index = 0;
+
+        map<string, int> word_num;
+        map<string, int> word_count;
+        for (int i = 0; i <= words.size() - 1; i++){
+            if (word_num.count(words[i]) == 0){
+                word_num[words[i]] = 1;
+                word_count[words[i]] = 0;
+            }
+            else
+                word_num[words[i]] += 1;
+        }
+
+        priority_queue<data_point, vector<data_point>, cmp> word_index_data;
+
+        while (begin_index <= s.length() - 1){
+            end_index = begin_index;
+            while (end_index <= s.length() - word_len){
+                string one_test_word = s.substr(end_index, word_len);
+                bool if_exist = false;
+                for (int i = 0; i <= words.size() - 1; i++){
+                    if (words[i] == one_test_word){
+                        if_exist = true;
+                        break;
+                    }
+                }
+
+                // if (if_exist){
+                //     if (word_count[one_test_word] < word_num[one_test_word]){
+                //         struct data_point new_word_input;
+                //         new_word_input.index = end_index;
+                //         new_word_input.word = one_test_word;
+                //         word_index_data.push(new_word_input);
+                //         word_count[one_test_word]++;
+                //         end_index += word_len;
+                //     }
+                //     else{
+                //         while (word_index_data.top().word != one_test_word){
+                //             word_count[word_index_data.top().word]--;
+                //             word_index_data.pop();
+                //         }
+                //         begin_index = word_index_data.top().index + word_len;
+                //         word_count[word_index_data.top().word]--;
+                //         word_index_data.pop();
+                //     }
+                // }
+                if (if_exist && (word_count[one_test_word] < word_num[one_test_word])){
+                    struct data_point new_word_input;
+                    new_word_input.index = end_index;
+                    new_word_input.word = one_test_word;
+                    word_index_data.push(new_word_input);
+                    word_count[one_test_word]++;
+                    end_index += word_len;
+                }
+                else
+                    break;
+            }
+            bool if_all_match = true;
+            for (int i = 0; i <= words.size() - 1; i++){
+                if (word_count[words[i]] != word_num[words[i]]){
+                    if_all_match = false;
+                    break;
+                }
+            }
+
+            if (if_all_match){
+                match_loc.push_back(begin_index);
+                while (!word_index_data.empty()){
+                    word_count[word_index_data.top().word]--;
+                    word_index_data.pop();
+                }
+                begin_index += 1;
+                end_index = begin_index;
+            }
+            else{
+                while (!word_index_data.empty()){
+                    word_count[word_index_data.top().word]--;
+                    word_index_data.pop();
+                }
+                begin_index += 1;
+                end_index = begin_index;
+            }
+        }
+    }
+    return match_loc;
+}
+
+string countAndSay(int n) {
+    if (n <= 0)
+        return "";
+    else if (n == 1)
+        return "1";
+    else{
+        string s_prev = "1";
+        int index = 1;
+        n--;
+        while (index <= n){
+            string s_new;
+            int i = 0;
+            while (i < s_prev.length()){
+                char current_char = s_prev[i];
+                int current_char_count = 1;
+                if (i < s_prev.length() - 1){
+                    while (s_prev[i + 1] == s_prev[i]){
+                        i++;
+                        current_char_count++;
+                    }
+                }
+                s_new += current_char_count + '0';
+                s_new += current_char;
+                i++;
+            }
+            if (index == n)
+                return s_new;
+            else{
+                s_prev = s_new;
+                index++;
+            }
+        }
+        return "";
+    }
+}
+
+
 
 int main()
 {
     cout<<"test begin"<<endl;
 
-    string test_str1 = "aaa";
-    string test_str2 = "a";
-    cout<<strStr(test_str1, test_str2)<<endl;
+    string test1 = "barfoothefoobarman";
+    vector<string> test2;
+    test2.push_back("foo");
+    test2.push_back("bar");
+    // test2.push_back("best");
+    // test2.push_back("good");
+    cout<<countAndSay(4)<<endl;
 
     return 0;
 }

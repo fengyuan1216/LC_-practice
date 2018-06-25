@@ -44,6 +44,32 @@ vector<string> letterCombinations(string digits) {
     return digit_str;
 }
 
+void nextPermutation(vector<int>& nums) {
+    int pos1 = -1;
+    for (int i = nums.size() - 2; i >= 0; --i){
+        if (nums[i + 1] > nums[i]){
+            pos1 = i;
+            break;
+        }
+    }
+    if (pos1 != -1){
+        int pos2 =  - 1;
+        for (pos2 = nums.size() - 1; pos2 > pos1; pos2--){
+            if (nums[pos2] > nums[pos1])
+                break;
+        }
+        int tmp = nums[pos1];
+        nums[pos1] = nums[pos2];
+        nums[pos2] = tmp;
+        sort(nums.begin() + pos1 + 1, nums.end());
+    }
+    else
+        sort(nums.begin(), nums.end());
+}
+
+vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+            
+}
 
 int main()
 {

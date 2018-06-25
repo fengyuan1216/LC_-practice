@@ -76,24 +76,156 @@ double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
     }
 }
 
+int search(vector<int>& nums, int target) {
+    if (nums.size() == 0)
+        return -1;
 
+    int lo = 0;
+    int hi = nums.size() - 1;
+    int mid = (lo + hi) / 2;
+    
+    if (nums[0] > nums[nums.size() - 1]){
+        while (hi - lo > 1){
+            mid = (lo + hi) / 2;
+            if (nums[mid] > nums[lo])
+                lo = mid;
+            if (nums[mid] < nums[hi])
+                hi = mid;
+        }
+        if (target <= nums[nums.size() - 1]){
+            lo = hi;
+            hi = nums.size() - 1;
+        }
+        else{
+            hi = lo;
+            lo = 0;
+        }
+    }
+
+    while (lo <= hi){
+        mid = (lo + hi) / 2;
+        if (nums[mid] == target)
+            return mid;
+        else if (nums[mid] < target)
+            lo = mid + 1;
+        else
+            hi = mid - 1;
+    }
+
+    return -1;
+}
+
+vector<int> searchRange(vector<int>& nums, int target) {
+    vector<int> range;
+    if (nums.size() == 0){
+        range.push_back(-1);
+        range.push_back(-1);
+        return range;
+    }
+        
+    int lo = 0;
+    int hi = nums.size() - 1;
+    int mid;
+    bool if_find = false;
+
+    while (lo <= hi){
+        mid = (lo + hi) / 2;
+        if (nums[mid] == target){
+            if_find = true;
+            break;
+        }
+        else if (nums[mid] > target)
+            hi = mid - 1;
+        else
+            lo = mid + 1;
+    }
+
+    if (if_find == false){
+        range.push_back(-1);
+        range.push_back(-1);
+        return range;
+    }
+    else{
+        int mid_index = mid;
+
+        lo = 0;
+        hi = mid_index;
+        double left_ref = target - 0.5;
+        if (nums[lo] == target)
+            range.push_back(lo);
+        else{
+            while (hi - lo > 1){
+                mid = (lo + hi) / 2;
+                if (nums[mid] > left_ref)
+                    hi = mid;
+                if (nums[mid] < left_ref)
+                    lo = mid;
+            }
+            range.push_back(hi);
+        }
+        
+        lo = mid_index;
+        hi = nums.size() - 1;
+        double right_ref = target + 0.5;
+        if (nums[hi] == target)
+            range.push_back(hi);
+        else{
+            while (hi - lo > 1){
+                mid = (lo + hi) / 2;
+                if (nums[mid] < right_ref)
+                    lo = mid;
+                if (nums[mid] > right_ref)
+                    hi = mid;
+            }
+            range.push_back(lo);
+        }
+
+        return range;
+    }
+}
+
+int searchInsert(vector<int>& nums, int target) {
+    if (nums.size() == 0)
+        return 0;
+
+    int lo = 0;
+    int hi = nums.size() - 1;
+    int mid;
+
+    while (lo <= hi){
+        mid = (lo + hi) / 2;
+        if (nums[mid] == target)
+            return mid;
+        else{
+            if (lo == hi)
+                break;
+            if (nums[mid] < target)
+                lo = mid + 1;
+            if (nums[mid] > target)
+                hi = mid - 1;
+        }
+    }
+
+    if (nums[lo] < target)
+        return lo + 1;
+    else
+        return lo;
+}
 
 
 int main()
 {
     vector<int> s1;
-    s1.push_back(1);
+    s1.push_back(4);
+    // s1.push_back(5);
+    // s1.push_back(1);
     // s1.push_back(2);
-    s1.push_back(3);
-
-    vector<int> s2;
-    // s2.push_back(1);
-    s2.push_back(2);
-    // s2.push_back(2);
+    // s1.push_back(3);
+    
 
     cout<<"test"<<endl;
 
-    cout<<findMedianSortedArrays(s1, s2)<<endl;
+    cout<<search(s1, 4)<<endl;
 
     return 0;
 }
