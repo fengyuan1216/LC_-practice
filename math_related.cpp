@@ -307,6 +307,38 @@ int divide(int dividend, int divisor) {
     }
 }
 
+int trap(vector<int>& height) {
+    if (height.size() == 0 || height.size() == 1){
+        return 0;
+    }
+
+    int current_max_height = height[0];
+
+    int trap_left = 0;
+    for (int i = 0; i < height.size(); i++) {
+        trap_left += current_max_height - height[i];
+        if (i + 1 < height.size() && height[i + 1] > current_max_height) {
+            current_max_height = height[i + 1];
+        }
+    }
+
+    current_max_height = height[height.size() - 1];
+    int trap_right = 0;
+    for (int i = height.size() - 1; i >= 0; i--) {
+        trap_right += current_max_height - height[i];
+        if (i - 1 >= 0 && height[i - 1] > current_max_height) {
+            current_max_height = height[i - 1];
+        }
+    }
+
+    int trap_all = 0;
+    for (int i = 0; i < height.size(); i++) {
+        trap_all += current_max_height - height[i];
+    }
+
+    return trap_left + trap_right - trap_all;
+}
+
 
 int main()
 {

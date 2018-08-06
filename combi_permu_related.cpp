@@ -67,16 +67,70 @@ void nextPermutation(vector<int>& nums) {
         sort(nums.begin(), nums.end());
 }
 
-vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-            
+vector<vector<int> > combinationSum(vector<int>& candidates, int target) {
+    vector<vector<int> > answer;
+    vector<int> one_answer;
+    combinationSum_helper(answer, candidates, one_answer, target, 0);
+    return answer;
 }
+
+void combinationSum_helper(vector<vector<int> >& answer_combi, vector<int>& candidates, vector<int> one_answer, int target, int index) {
+    if (target == 0) {
+        answer_combi.push_back(one_answer);
+        return;
+    }
+    else {
+        for (int i = index; i < candidates.size(); i++) {
+            if (target - candidates[i] >= 0) {
+                one_answer.push_back(candidates[i]);
+                combinationSum_helper(answer_combi, candidates, one_answer, target - candidates[i], i);
+                one_answer.pop_back();
+            }
+        }
+        return;
+    }
+}
+
+
+vector<vector<int> > combinationSum2(vector<int>& candidates, int target) {
+    vector<vector<int> > answer;
+    vector<int> one_answer;
+    sort(candidates.begin(), candidates.end());
+    combinationSum_helper2(answer, candidates, one_answer, target, 0);
+    return answer;
+}
+
+void combinationSum_helper2(vector<vector<int> >& answer_combi, vector<int>& candidates, vector<int> one_answer, int target, int index) {
+    if (target == 0) {
+        answer_combi.push_back(one_answer);
+        return;
+    }
+    else {
+        for (int i = index; i < candidates.size(); i++) {
+            if (target - candidates[i] >= 0) {
+                one_answer.push_back(candidates[i]);
+                combinationSum_helper2(answer_combi, candidates, one_answer, target - candidates[i], i + 1);
+                one_answer.pop_back();
+            }
+            while ((i + 1 < candidates.size()) && (candidates[i + 1] == candidates[i])) {
+                i++;
+            }
+        }
+        return;
+    }
+}
+
+
 
 int main()
 {
     cout<<"test begin"<<endl;
 
     string input_test = "23";
-    cout<<letterCombinations(input_test).size()<<endl;
+    
+    int x = -1;
+    int y = 4;
+    cout<<(x/y)<<endl;
 
     return 0;
 }

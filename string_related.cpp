@@ -484,18 +484,77 @@ string countAndSay(int n) {
 }
 
 
+string multiply(string num1, string num2) {
+    if (num1.length() == 0 || num2.length() == 0) {
+        return "0";
+    }
+    if (num1 == "0" || num2 == "0") {
+        return "0";
+    }
+    
+    if (num1.length() < num2.length()) {
+        return multiply(num2, num1);
+    }
+
+    int total_len = num1.length() + num2.length();
+    int *answer = new int[total_len];
+    for (int i = 0; i < total_len; i++) {
+        answer[i] = 0;
+    }
+
+    for (int i = num2.length() - 1; i >= 0; i--) {
+        int n2 = num2[i] - '0';
+        for (int j = num1.length() - 1; j >= 0; j--) {
+            int n1 = num1[j] - '0';
+            answer[i + j + 1] += n1 * n2;
+        }
+    }
+
+    for (int i = total_len - 1; i >= 0; i--) {
+        if (i > 0) {
+            while (answer[i] >= 10) {
+                answer[i - 1] += answer[i] / 10;
+                answer[i] = answer[i] % 10;
+            }
+        }
+    }
+
+    int str_len = total_len;
+    for (int i = 0; i < total_len; i++) {
+        if (answer[i] == 0) {
+            str_len--;
+        }
+        else {
+            break;
+        }
+    }
+
+    string ans_str = "";
+    for (int i = total_len - str_len; i < total_len; i++) {
+        ans_str += '0' + answer[i];
+    }
+
+    delete [] answer;
+    return ans_str;
+}
+
+
+
+
 
 int main()
 {
     cout<<"test begin"<<endl;
 
-    string test1 = "barfoothefoobarman";
-    vector<string> test2;
-    test2.push_back("foo");
-    test2.push_back("bar");
-    // test2.push_back("best");
-    // test2.push_back("good");
-    cout<<countAndSay(4)<<endl;
+    // string test1 = "barfoothefoobarman";
+    // vector<string> test2;
+    // test2.push_back("foo");
+    // test2.push_back("bar");
+    // // test2.push_back("best");
+    // // test2.push_back("good");
+    // cout<<countAndSay(4)<<endl;
+
+    cout<<multiply("2", "3")<<endl;
 
     return 0;
 }

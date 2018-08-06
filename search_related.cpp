@@ -213,19 +213,67 @@ int searchInsert(vector<int>& nums, int target) {
 }
 
 
+void swap(vector<int>& nums, int index) {
+    int target_index = nums[index] - 1;
+    if (target_index >= 0 && target_index < nums.size()) {
+        int target_value = nums[target_index];
+        int current_value = nums[index];
+
+        if (target_value != current_value){
+            nums[index] = target_value;
+            nums[target_index] = current_value;
+            swap(nums, index);
+        }
+        else {
+            return;
+        }
+    }
+    else {
+        nums[index] = 0;
+        return;
+    }
+}
+
+int firstMissingPositive(vector<int>& nums) {
+    if (nums.size() == 0) {
+        return 1;
+    }
+    if (nums.size() == 1) {
+        if (nums[0] != 1) {
+            return 1;
+        }
+        else {
+            return 2;
+        }
+    }
+
+    for (int i = 0; i < nums.size(); i++) {
+        swap(nums, i);
+    }
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] != i + 1) {
+            return i + 1;
+        }
+    }
+    return nums.size() + 1;
+}
+
+
 int main()
 {
     vector<int> s1;
-    s1.push_back(4);
-    // s1.push_back(5);
-    // s1.push_back(1);
-    // s1.push_back(2);
+    s1.push_back(1);
+    s1.push_back(-1);
+    s1.push_back(5);
+    s1.push_back(3);
     // s1.push_back(3);
     
 
     cout<<"test"<<endl;
 
-    cout<<search(s1, 4)<<endl;
+    cout<<firstMissingPositive(s1)<<endl;
+
+    cout<<s1[0]<<" "<<s1[1]<<" "<<s1[2]<<" "<<s1[3]<<endl;
 
     return 0;
 }
