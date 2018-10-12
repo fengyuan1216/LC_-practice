@@ -5,6 +5,7 @@
 #include<vector>
 #include<stack>
 #include<map>
+#include<set>
 
 using namespace std;
 
@@ -118,6 +119,59 @@ void combinationSum_helper2(vector<vector<int> >& answer_combi, vector<int>& can
         }
         return;
     }
+}
+
+
+void permute_helper(vector<int>& nums, vector<vector<int> >& answer, int start_index) {
+    if (start_index == nums.size()) {
+        answer.push_back(nums);
+        return;
+    }
+
+    for (int i = start_index; i < nums.size(); i++) {
+        swap(nums[start_index], nums[i]);
+        permute_helper(nums, answer, start_index + 1);
+        swap(nums[start_index], nums[i]);
+    }
+}
+
+vector<vector<int> > permute(vector<int>& nums) {
+    vector<vector<int> > answer;
+    if (nums.size() == 0) {
+        return answer;
+    }
+    permute_helper(nums, answer, 0);
+    return answer; 
+}
+
+
+
+void permuteUnique_helper(vector<int>& nums, set<vector<int> >& answer, int start_index) {
+    if (start_index == nums.size()) {
+        answer.insert(nums);
+        return;
+    }
+
+    for (int i = start_index; i < nums.size(); i++) {
+        if (nums[i] == nums[start_index] && i > start_index) {
+            continue;
+        }
+        else {
+            swap(nums[start_index], nums[i]);
+            permuteUnique_helper(nums, answer, start_index + 1);
+            swap(nums[start_index], nums[i]);
+        }
+    }
+}
+
+vector<vector<int> > permuteUnique(vector<int>& nums) {
+    set<vector<int> > answer;
+    if (nums.size() == 0) {
+        return vector<vector<int> >(answer.begin(), answer.end());
+    }
+    sort(nums.begin(), nums.end());
+    permuteUnique_helper(nums, answer, 0);
+    return vector<vector<int> >(answer.begin(), answer.end());
 }
 
 

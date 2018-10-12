@@ -339,13 +339,66 @@ int trap(vector<int>& height) {
     return trap_left + trap_right - trap_all;
 }
 
+int jump(vector<int>& nums) {
+    if (nums.size() <= 1) {
+        return 0;
+    }
+
+    int step = 0;
+    int current_index = 0;
+
+    while (current_index < nums.size() - 1) {
+        int far_index = 0;
+        int new_current_index = current_index;
+        
+        for (int tmp_move = 1; tmp_move <= nums[current_index]; tmp_move++) {
+            if (tmp_move + current_index < nums.size() - 1) {
+                if (tmp_move + nums[tmp_move + current_index] > far_index) {
+                    far_index = tmp_move + nums[tmp_move + current_index];
+                    new_current_index = current_index + tmp_move;
+                }
+            }
+            else {
+                return step + 1;
+            }
+        }
+
+        current_index = new_current_index;
+        step++;
+    }
+
+    return step;
+}
+
+void rotate(vector<vector<int> >& matrix) {
+    if (matrix.size() == 0) {
+        return;
+    }
+    int m = matrix.size();
+    int n = matrix[0].size();
+    reverse(matrix.begin(), matrix.end());
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < i; j++) {
+            int tmp = matrix[i][j];
+            matrix[i][j] = matrix[j][i];
+            matrix[j][i] = tmp;
+        }
+    }
+}
+
 
 int main()
 {
     cout<<"test begin"<<endl;
 
-    cout<<divide(15,2)<<endl;
-    // cout<<(1<<31);
+    vector<int> s1;
+    s1.push_back(2);
+    s1.push_back(3);
+    s1.push_back(1);
+    // s1.push_back(1);
+    // s1.push_back(4);
+
+    cout<<jump(s1)<<endl;
 
     return 0;
 }

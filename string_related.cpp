@@ -540,6 +540,68 @@ string multiply(string num1, string num2) {
 
 
 
+bool isMatch_wildcard_helper(string s, string p, int index_s, int index_p) {
+    if (index_s == s.length() && index_p == p.length()) {
+        return true;
+    }
+
+    if (index_p <= p.length() - 2 && p[index_p + 1] == '*') {
+        if (p[index_p] == '?') {
+            int tmp_index = index_s;
+            while (tmp_index <= s.length()) {
+                if (isMatch_wildcard_helper(s, p, tmp_index, index_p + 2)) {
+                    return true;
+                }
+                else {
+                    tmp_index++;
+                }
+            }
+            return false;
+        }
+        else {
+            if (p[index_p] == s[index_s]) {
+                int index_s_most_rigth = index_s + 1;
+                while (index_s_most_rigth < s.length() && s[index_s_most_rigth] == s[index_s_most_rigth - 1]) {
+                    index_s_most_rigth++;
+                }
+                int tmp_index = index_s;
+                while (tmp_index <= index_s_most_rigth) {
+                    if (isMatch_wildcard_helper(s, p, tmp_index, index_p + 2)) {
+                        return true;
+                    }
+                    else {
+                        tmp_index++;
+                    }
+                }
+                return false;
+            }
+            else {
+                return isMatch_wildcard_helper(s, p, index_s, index_p + 2);
+            }
+        }
+    }
+    else if (p[index_p] == '?') {
+        return isMatch_wildcard_helper(s, p, index_s + 1, index_p + 1);
+    }
+    else {
+        if (s[index_s] == p[index_p]) {
+            return isMatch_wildcard_helper(s, p, index_s + 1, index_p + 1);
+        }
+        else {
+            return false;
+        }
+    }
+}
+
+bool isMatch_wildcard(string s, string p) {
+    return isMatch_wildcard_helper(s, p, 0, 0);
+}
+
+
+vector<vector<string> > groupAnagrams(vector<string>& strs) {
+      
+}
+
 
 
 int main()
@@ -554,7 +616,7 @@ int main()
     // // test2.push_back("good");
     // cout<<countAndSay(4)<<endl;
 
-    cout<<multiply("2", "3")<<endl;
+    cout<<isMatch_wildcard("aab", "c*a*b")<<endl;
 
     return 0;
 }
