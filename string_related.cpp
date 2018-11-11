@@ -603,6 +603,58 @@ vector<vector<string> > groupAnagrams(vector<string>& strs) {
 }
 
 
+void reverseWords(string &s) {
+    int len = s.length();
+    if (len == 0)
+        return;
+    
+    int left_begin = 0;
+    int right_end = len - 1;
+    
+    while (s[left_begin] == ' ') {
+        if (left_begin == len - 1)
+            return;
+        else
+            left_begin++;
+    }
+    
+    while (s[right_end] == ' ') 
+        right_end--;
+    
+    s = s.substr(left_begin, right_end - left_begin + 1);
+    
+    stack<string> ss;
+    
+    int i = 0;
+    int left = 0;
+    while (i < s.length()) {
+        while (s[i] != ' ') {
+            i++;
+            if (i == s.length() - 1) {
+                ss.push(s.substr(left, i-left+1));
+                break;
+            }
+        }
+        if (i == s.length() - 1)
+            break;
+        
+        ss.push(s.substr(left, i-left));
+        
+        while (s[i] == ' ')
+            i++;
+        
+        left = i;
+    }
+    
+    string tmp = "";
+    while (!ss.empty()) {
+        tmp += ss.top() + ' ';
+        cout<<ss.top()<<endl;
+        ss.pop();
+    }
+    s = tmp.substr(0, tmp.length()-1);
+}
+
 
 int main()
 {
@@ -616,7 +668,28 @@ int main()
     // // test2.push_back("good");
     // cout<<countAndSay(4)<<endl;
 
-    cout<<isMatch_wildcard("aab", "c*a*b")<<endl;
+    // cout<<isMatch_wildcard("aab", "c*a*b")<<endl;
+    // string s1 = "the sky is blue";
+    // cout<<s1<<endl;
+    // reverseWords(s1);
+    // cout<<s1<<endl;
 
+    string test = "123";
+    int x = stoi(test);
+    cout<<x<<endl;
+
+    int y = 456;
+    string test2 = to_string(y);
+    cout<<test2<<", "<<test2.length()<<endl;
+
+    int len = 3;
+    string* ps = new string[len];
+    ps[0] = "aa";
+    ps[1] = "bb";
+    ps[2] = "cc";
+    cout<<*ps<<endl;
+    cout<<*(ps+1)<<endl;
+    cout<<*(ps+2)<<endl;
+    
     return 0;
 }
