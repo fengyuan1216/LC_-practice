@@ -5,6 +5,7 @@
 #include<stack>
 #include<map>
 #include<unordered_map>
+#include<set>
 
 using namespace std;
 
@@ -192,12 +193,322 @@ void bst_test() {
 
 
 
+int cal_upper_bound(vector<int>& nums, int target) {
+    int n = nums.size();
+    long long left = 0;
+    long long right = n-1;
+    long long mid;
+    long long ans = -1;
 
+    while (left <= right) {
+        mid = (left + right) / 2;
+
+        if (nums[mid] == target) {
+            ans = mid;
+            left = mid+1;
+        }
+        else if (nums[mid] < target)
+            left = mid+1;
+        else
+            right = mid-1;
+    }
+    return int(ans);
+}
+
+int cal_lower_bound(vector<int>& nums, int target) {
+    int n = nums.size();
+    long long left = 0;
+    long long right = n-1;
+    long long mid;
+    long long ans = -1;
+
+    while (left <= right) {
+        mid = (left + right) / 2;
+
+        if (nums[mid] == target) {
+            ans = mid;
+            right = mid-1;
+        }
+        else if (nums[mid] < target)
+            left = mid+1;
+        else
+            right = mid-1;
+    }
+    return int(ans);
+}
+
+
+int cal_ceiling(vector<int>& nums, int target) {
+    int n = nums.size();
+    long long left = 0;
+    long long right = n-1;
+    long long mid;
+    long long ans = -1;
+
+    while (left <= right) {
+        mid = (left + right) / 2;
+
+        if (nums[mid] == target) {
+            return mid;
+        }
+        else if (nums[mid] > target) {
+            ans = mid;
+            right = mid-1;
+        }
+        else
+            left = mid+1;
+    }
+    return ans;
+}
+
+
+int cal_floor(vector<int>& nums, int target) {
+    int n = nums.size();
+    long long left = 0;
+    long long right = n-1;
+    long long mid;
+    long long ans = -1;
+
+    while (left <= right) {
+        mid = (left + right) / 2;
+
+        if (nums[mid] == target) {
+            return mid;
+        }
+        else if (nums[mid] < target) {
+            ans = mid;
+            left = mid+1;
+        }
+        else
+            right = mid-1;
+    }
+    return ans;
+}
+
+
+struct datapoint {
+    int begin;
+    int end;
+};
+
+
+bool cmp(const datapoint& a, const datapoint& b) {
+    if (a.begin == b.begin) return a.end < b.end;
+    else return a.begin < b.begin;
+}
+
+
+
+void sorting_test() {
+    datapoint dp[5];
+    dp[0].begin = 4;
+    dp[0].end = 1;
+    dp[1].begin = 2;
+    dp[1].end = 3;
+    dp[2].begin = 9;
+    dp[2].end = 10;
+    dp[3].begin = 9;
+    dp[3].end = 6;
+    dp[4].begin = 2;
+    dp[5].end = 1;
+
+    vector<datapoint> v;
+    for (int i = 0; i < 5; i++)
+        v.push_back(dp[i]);
+
+    for (int i = 0; i < 5; i++) {
+        cout<<v[i].begin<<","<<v[i].end<<endl;
+    }
+    cout<<endl;
+
+    sort(v.begin(), v.end(), cmp);
+
+    for (int i = 0; i < 5; i++) {
+        cout<<v[i].begin<<","<<v[i].end<<endl;
+    }
+    cout<<endl;
+    
+}
+
+void sorting_test2() {
+    
+}
+
+bool cmp2(const int& a, const int& b) {
+    return a > b;
+}
+
+string get_lower(string s) {
+    int n = s.size();
+    vector<int> nums;
+    string ans;
+    for (int i = 0; i < n; i++)
+        nums.push_back(s[i]-'0');
+
+    int index = 1;
+    for (int index = 1; index < n; index++) {
+        if (nums[index] < nums[index-1])
+            break;
+    }
+    if (index == n) {
+        reverse(nums.begin(), nums.end());
+        for (int i = 0; i < n; i++)
+            ans += to_string(nums[i]);
+        return ans;
+    }
+
+    for (index = n-1; index >= 1; index--) {
+        if (nums[index] < nums[index-1])
+            break;
+    }
+    index--;
+
+    int ref = INT_MIN;
+    int index2 = index+1;
+    for (int i = index+1; i < n; i++) {
+        if (nums[i] < nums[index] && nums[i] > ref) {
+            ref = nums[i];
+            index2 = i;
+        }
+    }
+
+    int tmp = nums[index];
+    nums[index] = nums[index2];
+    nums[index2] = tmp;
+
+    sort(nums.begin()+index+1, nums.end(), cmp2);
+
+    for (int i = 0; i < n; i++)
+        ans += to_string(nums[i]);
+    return ans;
+}
+
+
+
+TreeNode* buildtree() {
+    TreeNode* root = new TreeNode(1);
+    TreeNode* p = root;
+    p->left = new TreeNode(2);
+    p->right = new TreeNode(3);
+
+    p->left->left = new TreeNode(4);
+    p->left->right = new TreeNode(5);
+    p->right->right = new TreeNode(6);
+    p->right->right->left = new TreeNode(7);
+
+    return root;
+}
+
+
+TreeNode* find_lca(TreeNode* p, int tar1, int tar2) {
+    if (p == NULL) return NULL;
+    if (p->val == tar1 || p->val == tar2) return p;
+
+    TreeNode* left = find_lca(p->left, tar1, tar2);
+    TreeNode* right = find_lca(p->right, tar1, tar2);
+
+    if (left == NULL && right == NULL) return NULL;
+    else if (left != NULL && right == NULL) return left;
+    else if (left == NULL && right != NULL) return right;
+    else return p;
+}
+
+void find_path(TreeNode* p, int tar, vector<TreeNode*>& ans, vector<TreeNode*> path) {
+    if (p == NULL) return;
+    if (p->val == tar) {
+        path.push_back(p);
+        ans = path;
+        // path.pop_back();
+        return;
+    }
+
+    path.push_back(p);
+    find_path(p->left, tar, ans, path);
+    find_path(p->right, tar, ans, path);
+    // path.pop_back();
+    
+    return;
+}
+
+
+void find_node_len() {
+    TreeNode* root = buildtree();
+
+    int tar1 = 3;
+    int tar2 = 7;
+
+    TreeNode* lca = find_lca(root, tar1, tar2);
+    vector<TreeNode*> path;
+    vector<TreeNode*> path1;
+    vector<TreeNode*> path2;
+   
+    find_path(root, tar1, path1, path);
+    find_path(root, tar2, path2, path);
+
+    for (int i = 0; i < path1.size(); i++)
+        cout<<path1[i]->val<<",";
+    cout<<endl;
+
+    for (int i = 0; i < path2.size(); i++)
+        cout<<path2[i]->val<<",";
+    cout<<endl;
+
+    int len = path1.size() + path2.size();
+    for (int i = 0; i < min(path1.size(), path2.size()); i++) {
+        if (path1[i] == path2[i]) len -= 2;
+    }
+    len++;
+
+    cout<<len<<endl;
+}
+
+
+
+
+
+void testfunc() {
+    string S = "abCi";
+    string J = "iyghCay";
+
+    set<char> s;
+
+    for (int i = 0; i < S.size(); i++) {
+        s.insert(S[i]);
+    }
+
+    int cnt = 0;
+    for (int j = 0; j < J.size(); j++) {
+        if (s.find(J[j]) != s.end())
+            cnt++;
+    }
+    cout<<cnt<<endl;
+}
 
 
 int main() {
+    // find_node_len();
+    // testfunc();
+
     // int test_result1 = Longest_Arithmetic_Progression();
     // cout<<test_result1<<endl;
-    bst_test();
+    // bst_test();
+    // vector<int> nums = {1,2,2,2,3,3,3,4,5,6,6,7};
+    // int a[] = {1,2,2,2,4,4,5,6,6,7};
+    // vector<int> nums;
+    // int n = sizeof(a)/sizeof(a[0]);
+    // for (int i = 0; i < n; i++)
+    //     nums.push_back(a[i]);
+
+    // cout<<cal_lower_bound(nums, 3)<<endl;
+    // cout<<cal_upper_bound(nums, 3)<<endl;
+
+    // int target = 8;
+    // cout<<cal_floor(nums, target)<<":"<<nums[cal_floor(nums, target)]<<endl;
+    // cout<<cal_ceiling(nums, target)<<":"<<nums[cal_ceiling(nums, target)]<<endl;
+
+    // string ss = "4123";
+    // string ans = get_lower(ss);
+    // cout<<ans<<endl;
+
     return 0;
 }
